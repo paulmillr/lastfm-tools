@@ -25,11 +25,11 @@ Some parts of code are taken from Ionut Bizau's script (BSD license).
 
 ## Usage
     # This would download all last.fm data to a single file.
-    python lastfm.py backup played_count backup_file_location username password
+    ./run --mode=backup --field=played_count --file=filename --username=username
 
     # This would sync lastfm data with an iTunes (on macs).
-    python lastfm.py sync played_count backup_file_location
-    python lastfm.py sync rating backup_file_location
+    ./run --mode=sync --field=played_count --file=filename
+    ./run --mode=sync --field=rating --file=filename
 
     # This would upload data from a single file to last.fm account.
-    python lastfm.py restore backup_file_location username password
+    ./run --mode=restore --field=played_count --file=filename --username=username

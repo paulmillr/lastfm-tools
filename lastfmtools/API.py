@@ -42,7 +42,8 @@ class API:
         songs = []
         for song in xml_page:
             art = song.find("artist")
-            art = art.find("name").text if art.find("name") else art.text
+            name = art.find("name")
+            art = name.text if name is not None else art.text
             ts = song.find("date")
             if ts is not None:
                 ts = int(ts.attrib["uts"])

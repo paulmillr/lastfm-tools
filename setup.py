@@ -3,14 +3,11 @@
 from distutils.core import setup
 import os.path
 
-# Utility function to read the README file.
-# Used for the long_description.  It"s nice, because now 1) we have a top level
-# README file and 2) it"s easier to type in the README file than to put a raw
-# string in below ...
 
+def read(filename):
+    with open(os.path.join(os.path.dirname(__file__), filename)) as file:
+        return file.read()
 
-def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
     name="lastfmtools",
@@ -24,7 +21,7 @@ setup(
     ],
 
     author="Paul Miller",
-    author_email="paulpmiller@gmail.com",
+    author_email="paulpmillr@gmail.com",
     description="No description entered for lastfmtools",
     url="http://github.com/paulmillr/lastfmtools",
     license="MIT",
@@ -35,4 +32,5 @@ setup(
         "Topic :: Utilities",
         "License :: OSI Approved :: MIT License",
     ],
+	requires=["appscript", "lxml"],
 )

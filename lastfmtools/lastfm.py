@@ -59,18 +59,19 @@ class Lastfm:
         except AttributeError:
             pass
 
-    def _split_line(self, line, utf8=True):
-        if utf8:
-            line = line.decode("utf-8")
+    def _split_line(self, line):
         track = line.strip().split(self.SEPARATOR)
         track[2] = int(track[2])  # timestamp
-        return dict(list(zip(self.fields, track)))
+        return dict(zip(self.fields, track))
 
-    def _parse_logfile_itunes(self, f):
-        return [self._split_line(line) for line in f]
-
-    def _parse_logfile_lastfm(self, f):
-        return [self._split_line(line, False) for line in f]
+    def _parse_logfile(self, file):
+        data = []
+        for line in file:
+            try:
+                data.append(self._split_line(line))
+            except ValueError:
+                continue
+        return data
 
     def bootstrap(self, tracks):
         timestamp = str(int(time()))
@@ -155,29 +156,52 @@ class Lastfm:
                 artist, title, field, value
             ))
 
+    def _dump_page(self, file, page, page_number):
+        start, limit, step, total = (self.start, self.limit,
+                                     self.step, self.total)
+        current = abs(int(start + (limit / step) * page_number))
+        percents = round(current / total * 100, 1)
+        if current > total:
+            percents = 100
+            current = total
+        print_flush("{}% of tracks dumped ({}/{}).".format(
+            percents, current, total))
+        for song in page["songs"]:
+            self._write(file, song)
+
     def dump(self, field, filename, start=1, stop=None, step=1):
         """Backups user tracks to file."""
-        method = self.methods_map[field]
+        try:
+            method = self.methods_map[field]
+        except KeyError:
+            raise ValueError(
+                "No such dumping method '{}'. Allowed methods are: {}".format(
+                    field, ", ".join(self.methods_map.keys())
+                )
+            )
         t = self.api.total(method)
         tracks, limit, pages = t["tracks"], t["limit"], t["pages"]
         total = stop * (limit / step) if stop else tracks
-        with open(filename, "w") as f:
-            print("Method is", method)
+
+        self.start = start
+        self.stop = stop
+        self.step = step
+        self.limit = limit
+        self.total = total
+
+        with open(filename, "w") as file:
             pages = self.api.get(method, slice(start, stop, step))
-            for n, page in enumerate(pages, start=1):
-                cur = start + (limit / step) * n
-                print_flush("{} tracks dumped from {}".format(abs(cur), total))
-                for song in page["songs"]:
-                    self._write(f, song)
+            for page_number, page in enumerate(pages, start=1):
+                self._dump_page(file, page, page_number)
             print()
 
     def scrobble(self, filename):
         """Scrobbles songs from file."""
-        with open(filename, "r") as f:
-            tracks = self._prepare_tracks(self._parse_logfile_lastfm(f))
+        with open(filename, "r") as file:
+            tracks = self._prepare_tracks(self._parse_logfile(file))
         self.bootstrap(tracks)
 
     def sync(self, field, filename):
-        with open(filename, "r") as f:
-            tracks = self._group_tracks(self._parse_logfile_itunes(f))
+        with open(filename, "r") as file:
+            tracks = self._group_tracks(self._parse_logfile(file))
         self._set_itunes(field, tracks)

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
+import socket
 import unittest
 import urllib.request
 import urllib.error
@@ -11,7 +12,7 @@ from lxml.etree import XML
 
 
 class API:
-    def __init__(self, user="", limit=200,
+    def __init__(self, user="", limit=150,
                  api_key="b25b959554ed76058ac220b7b2e0a026"):
         self.user = user
         self.key = api_key
@@ -50,7 +51,7 @@ class API:
             data = OrderedDict((
                 ("artist", art),
                 ("title", song.find("name").text),
-                ("timestamp", ts)
+                ("timestamp", ts),
             ))
             songs.append(data)
         return {"stat": stat, "songs": songs}
@@ -62,8 +63,8 @@ class API:
             data = self.opener.open(url, timeout=20)
             xml_page = XML(data.read())
             return self._convert(xml_page)
-        except urllib.error.URLError as e:
-            print(("Got HTTP error {}, reconnecting. "
+        except (urllib.error.URLError, socket.timeout) as e:
+            print(("\nGot error {}, reconnecting. "
                    "Last page: {}".format(e, url)))
             time.sleep(10)
             return self._get(**kwargs)

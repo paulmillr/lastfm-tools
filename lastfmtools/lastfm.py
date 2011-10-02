@@ -70,7 +70,7 @@ class Lastfm:
             try:
                 data.append(self._split_line(line))
             except ValueError:
-                continue
+                pass
         return data
 
     def bootstrap(self, tracks):

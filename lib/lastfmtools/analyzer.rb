@@ -1,4 +1,4 @@
-module Lastfmtools
+module LastfmTools
   class Analyzer
     BEST = 'best'
     RATINGS = ['shit', 'meh', 'good', 'awesome']
@@ -38,11 +38,7 @@ module Lastfmtools
     # 
     # Returns boolean value.
     def tagged_with?(tag, artist)
-      if tag == BEST
-        best?(artist)
-      else
-        @tags[tag].include?(artist)
-      end
+      tag == BEST ? best?(artist) : @tags[tag].include?(artist)
     end
 
     # Examples
@@ -92,21 +88,22 @@ module Lastfmtools
     # 
     # Returns an array of matched artists.
     def best_of_tag(tag, limit = 7)
-      intersect_tags(tag, awesome).concat(intersect_tags(tag, good))[0..limit]
+      best = intersect_tags(tag, awesome) + intersect_tags(tag, good)
+      best[0..limit]
     end
 
     private
-
-    def best?(artist)
-      tagged_with?(awesome) || tagged_with?(good)
-    end
-
+    
     def awesome
       RATINGS.last
     end
 
     def good
       RATINGS[RATINGS.size - 2]
+    end
+
+    def best?(artist)
+      tagged_with?(awesome) || tagged_with?(good)
     end
   end
 end

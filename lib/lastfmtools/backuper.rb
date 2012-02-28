@@ -1,7 +1,8 @@
 require 'json'
 require 'lastfm'
+require 'set'
 
-module Lastfmtools
+module LastfmTools
   class Backuper
     PAGE_SIZE = 150
     attr_accessor :user
@@ -22,7 +23,8 @@ module Lastfmtools
 
     # Public: Reads a local backup of last.fm data.
     # 
-    # type - symbol or string. Currently only :tags and :tracks are supported.
+    # type - symbol or string. Currently only :tags and :tracks
+    #        are supported.
     # 
     # Examples
     # 
@@ -46,7 +48,8 @@ module Lastfmtools
 
     # Public: Writes a local backup of Last.FM data.
     # 
-    # type - symbol or string. Currently only :tags and :tracks are supported.
+    # type - symbol or string. Currently only :tags and :tracks
+    #        are supported.
     # data - data that will be JSON-serialized, pretty-printed and written.
     # 
     # Examples
@@ -62,20 +65,37 @@ module Lastfmtools
       nil
     end
 
+    # Public: Writes a local backup of Last.FM data.
+    # 
+    # type - symbol or string. Currently only :tags and :tracks
+    #        are supported.
+    # data - data that will be JSON-serialized, pretty-printed and written.
+    # 
+    # Examples
+    # 
+    #   get_top_site_artists('punk')
+    #   # => 
+    # 
+    # Returns array.
+    def get_top_site_artists(tag, limit = 50)
+      artists = @lastfm.tag.get_top_artists(tag, limit).map do |artist|
+        artist['name']
+      end
+      listened_artists = Set.new
+      read_backup(:tracks).each do |track|
+        listened_artists << track['artist']
+      end
+      (Set.new(artists) - listened_artists).to_a
+    end
+
     # Public: compares local backup and API data, downloads missing or
     # changed tags and updates backup file.
     def sync_tags
       tags = read_backup(:tags)
       changed_there, changed_here = get_changed_tags
-
-      get_tags_artists(changed_there).each do |tag, artists|
-        tags[tag] = artists
-      end
-      
-      tags.reject! do |tag, artists|
+      tags.merge!(get_tags_artists(changed_there)).reject! do |tag, artists|
         changed_here.include?(tag)
       end
-
       write_backup(:tags, tags)
     end
 
@@ -173,11 +193,11 @@ module Lastfmtools
 
       changed_there = new_tags.select do |tag, count|
         !old_tags.has_key?(tag) || old_tags[tag].size != count
-      end.map { |tag, count| tag }
+      end.keys
 
       changed_here = old_tags.select do |tag, artists|
         !new_tags.has_key?(tag)
-      end.map { |tag, artists| tag }
+      end.keys
 
       [changed_there, changed_here]
     end
@@ -213,7 +233,8 @@ module Lastfmtools
       puts "Downloading page #{page}"
       begin
         tracks = if timestamp
-          @lastfm.user.get_recent_tracks(@user, PAGE_SIZE, page, nil, timestamp)
+          ts = timestamp
+          @lastfm.user.get_recent_tracks(@user, PAGE_SIZE, page, nil, ts)
         else
           @lastfm.user.get_recent_tracks(@user, PAGE_SIZE, page)
         end
@@ -231,7 +252,8 @@ module Lastfmtools
     # Examples
     # 
     #   get_tracks(1313504528)
-    #   # => [{"artist": "Aphex Twin", "track": "5", "timestamp": 1313504528}])
+    #   # => [{"artist": "Aphex Twin", "track": "5",
+    #   # "timestamp": 1313504528}])
     # 
     # Returns a list of hashes with track information.
     def get_tracks(timestamp = nil)

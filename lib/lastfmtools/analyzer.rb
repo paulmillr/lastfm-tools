@@ -40,6 +40,21 @@ module Lastfmtools
       @tags[tag].include?(artist)
     end
 
+
+    # Public: Selects best artists tagged by tag.
+    # Selects only artists that have "best" and "almost best" ratings.
+    #
+    # tag - tracks of which tag should be selected.
+    # limit - how many tracks should method return.
+    # 
+    # Examples
+    # 
+    #   best_of_tag('punk')
+    #   # => ['Zebrahead']
+    #   best_of_tag('hip-hop')
+    #   # => ['Eminem']
+    # 
+    # Returns an array of matched artists.
     def best_of_tag(tag, limit = 7)
       awesome = intersect_tags(tag, RATINGS.last)
       good = intersect_tags(tag, RATINGS[RATINGS.size - 2])

@@ -15,11 +15,19 @@ module Lastfmtools
       File.join(@backup_location, "#{type}.json")
     end
 
-    # Example
+    # Public: Reads a local backup of last.fm data.
+    # 
+    # type - symbol or string. Currently only :tags and :tracks are supported.
+    # 
+    # Examples
     # 
     #   read_backup(:tags)
+    #   # => {'punk' => ['Zebrahead']}
     #   read_backup(:tracks)
+    #   # => []
     # 
+    # Returns object or array with parsed json from file or
+    # empty object / array.
     def read_backup(type)
       File.open(get_backup_path(type), 'r') do |file|
         JSON.parse(file.read)
@@ -31,13 +39,26 @@ module Lastfmtools
       end
     end
 
+    # Public: Writes a local backup of Last.FM data.
+    # 
+    # type - symbol or string. Currently only :tags and :tracks are supported.
+    # data - data that will be JSON-serialized, pretty-printed and written.
+    # 
+    # Examples
+    # 
+    #   write_backup(:tags, {'punk' => ['Zebrahead']})
+    #   write_backup(:tracks, [{"artist": "Aphex Twin",
+    #     "track": "55", "timestamp": 1313504528}])
+    # 
     def write_backup(type, data)
       File.open(get_backup_path(type), 'w') do |file|
         file.write(JSON.pretty_generate(data))
       end
-      true
+      nil
     end
 
+    # Public: compares local backup and API data, downloads missing or
+    # changed tags and updates backup file.
     def sync_tags
       tags = read_backup(:tags)
       changed_there, changed_here = get_changed_tags
@@ -53,6 +74,8 @@ module Lastfmtools
       write_backup(:tags, tags)
     end
 
+    # Public: compares local backup and API data and downloads missing tracks
+    # and updates backup file.
     def sync_tracks
       tracks = read_backup(:tracks)
       last_timestamp = (tracks.last || {})['timestamp']
@@ -60,6 +83,7 @@ module Lastfmtools
       write_backup(:tracks, tracks)
     end
 
+    # Public: Does all needed syncing.
     def sync
       sync_tags
       sync_tracks
@@ -76,7 +100,22 @@ module Lastfmtools
       sleep 15
       retry
     end
-  
+
+    # Private: Download tag data from Last.FM.
+    # 
+    # with_count - should it also return a count of tagged artists?
+    # 
+    # Examples
+    # 
+    #   get_tags
+    #   # => ['punk', 'good', 'meh']
+    #   get_tags(true)
+    #   # => {'punk' => 21, 'good' => 150, 'meh' => 143}
+    # 
+    # Returns:
+    # * A hash where tags are keys and number of tagged artists are
+    # values if with_count option were truthy.
+    # * An array with tags if with_count option were falsy.
     def get_tags(with_count = false)
       top = @lastfm.user.get_top_tags(@user, 500)
 
@@ -90,7 +129,19 @@ module Lastfmtools
     def get_tags_artists(tags)
       Hash[tags.map { |tag| [tag, get_tag_artists(tag)] }]
     end
-  
+
+    # Private: Get tags that were added or deleted at last.fm, compared
+    # to current tags backup.
+    # 
+    # Examples
+    # 
+    #   get_changed_tags
+    #   # => [['punk', 'good'], ['meh']]
+    # 
+    # Returns an array with two elements:
+    # * tags that were added at last.fm or tags which changed number of
+    # tagged artists.
+    # * tags that were deleted at last.fm.
     def get_changed_tags
       old_tags = read_backup(:tags)
       new_tags = get_tags(true)
@@ -122,6 +173,17 @@ module Lastfmtools
       end
     end
 
+    # Private: Downloads from Last.FM API page with tracks listened by user.
+    # 
+    # page - which page should it download.
+    # timestamp - optional, since what time should it download data.
+    # 
+    # Examples
+    # 
+    #   get_tracks_page(15, 1313504528)
+    #   get_tracks_page(1)
+    # 
+    # Returns an array of hashes with tracks data.
     def get_tracks_page(page, timestamp = nil)
       puts "Downloading page #{page}"
       begin

@@ -9,12 +9,6 @@ module Lastfmtools
     def initialize(backup_location, api_key, api_secret)
       @backup_location = backup_location
       @lastfm = Lastfm.new(api_key, api_secret)
-      # begin
-      #   @lastfm.session = @lastfm.auth.get_session(token)['key']
-      # rescue Lastfm::ApiError
-      #   puts 'Invalid token. Go to'
-      #   puts "http://www.last.fm/api/auth/?api_key=#{api_key}&token=#{token}"
-      # end
     end
     
     def get_backup_path(type)
@@ -44,44 +38,6 @@ module Lastfmtools
       true
     end
 
-    def get_tag_artists(tag)
-      @lastfm.user.get_personal_tags(@user, tag, nil, 500).map do |artist|
-        artist['name']
-      end
-    rescue Lastfm::ApiError
-      sleep 15
-      retry
-    end
-  
-    def get_tags(with_count = false)
-      top = @lastfm.user.get_top_tags(@user, 500)
-
-      if with_count
-        Hash[top.map {|tag| [tag['name'].downcase, tag['count'].to_i]}]
-      else
-        top.map {|tag| tag['name'].downcase}
-      end
-    end
-  
-    def get_tags_artists(tags)
-      Hash[tags.map {|tag| [tag, get_tag_artists(tag)]}]
-    end
-  
-    def get_changed_tags
-      old_tags = read_backup(:tags)
-      new_tags = get_tags(true)
-
-      changed_there = new_tags.select do |tag, count|
-        !old_tags.has_key?(tag) || old_tags[tag].size != count
-      end.map {|tag, count| tag}
-
-      changed_here = old_tags.select do |tag, artists|
-        !new_tags.has_key?(tag)
-      end.map {|tag, artists| tag}
-
-      [changed_there, changed_here]
-    end
-
     def sync_tags
       tags = read_backup(:tags)
       changed_there, changed_here = get_changed_tags
@@ -97,6 +53,58 @@ module Lastfmtools
       write_backup(:tags, tags)
     end
 
+    def sync_tracks
+      tracks = read_backup(:tracks)
+      last_timestamp = (tracks.last || {})['timestamp']
+      tracks.concat(get_tracks(last_timestamp).reverse.compact)
+      write_backup(:tracks, tracks)
+    end
+
+    def sync
+      sync_tags
+      sync_tracks
+    end
+    
+    private
+
+    def get_tag_artists(tag)
+      @lastfm.user.get_personal_tags(@user, tag, nil, 500).map do |artist|
+        artist['name']
+      end
+    rescue Lastfm::ApiError
+      sleep 15
+      retry
+    end
+  
+    def get_tags(with_count = false)
+      top = @lastfm.user.get_top_tags(@user, 500)
+
+      if with_count
+        Hash[top.map { |tag| [tag['name'].downcase, tag['count'].to_i] }]
+      else
+        top.map { |tag| tag['name'].downcase }
+      end
+    end
+  
+    def get_tags_artists(tags)
+      Hash[tags.map { |tag| [tag, get_tag_artists(tag)] }]
+    end
+  
+    def get_changed_tags
+      old_tags = read_backup(:tags)
+      new_tags = get_tags(true)
+
+      changed_there = new_tags.select do |tag, count|
+        !old_tags.has_key?(tag) || old_tags[tag].size != count
+      end.map { |tag, count| tag }
+
+      changed_here = old_tags.select do |tag, artists|
+        !new_tags.has_key?(tag)
+      end.map { |tag, artists| tag }
+
+      [changed_there, changed_here]
+    end
+    
     # Private: Remove not needed data from lastfm query result.
     # 
     # tracks - array of hashes, result of @lastfm.user.get_recent_tracks().
@@ -104,8 +112,7 @@ module Lastfmtools
     # Returns hash, where keys are timestamps and values are hashes with
     # fields 'artist' and 'track'.
     def convert_recent_tracks(tracks)
-      tracks.map do |track|
-        next if track['nowplaying']
+      tracks.reject { |track| track.has_key?('nowplaying') }.map do |track|
         {
           'timestamp' => track['date']['uts'].to_i,
           'artist' => track['artist']['content'],
@@ -113,7 +120,7 @@ module Lastfmtools
         }
       end
     end
-    
+
     def get_tracks_page(page, timestamp = nil)
       puts "Downloading page #{page}"
       begin
@@ -141,19 +148,6 @@ module Lastfmtools
         previous_page_tracks = current_page_tracks
       end
       tracks
-    end
-
-    def sync_tracks
-      tracks = read_backup(:tracks)
-      last_timestamp = (tracks.last || {})['timestamp']
-      puts 'Last timestamp', last_timestamp
-      tracks.concat(get_tracks(last_timestamp).reverse.compact)
-      write_backup(:tracks, tracks)
-    end
-
-    def sync
-      sync_tags
-      sync_tracks
     end
   end
 end

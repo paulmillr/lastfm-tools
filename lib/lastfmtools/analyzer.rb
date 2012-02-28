@@ -21,7 +21,7 @@ module Lastfmtools
     # 
     # Returns an array of matched artists.
     def intersect_tags(*tags)
-      tags.map {|tag| @tags[tag]}.reduce do |memo, tag|
+      tags.map { |tag| @tags[tag] }.reduce do |memo, tag|
         memo & tag
       end
     end

@@ -18,7 +18,7 @@ module Lastfmtools
       when /what is (.+)\?/
         show_rating_of($1)
       else
-        'Cannot parse query'
+        raise SyntaxError.new('Cannot parse query')
       end
     end
 

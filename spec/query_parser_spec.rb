@@ -34,5 +34,9 @@ describe Lastfmtools::QueryParser do
       @parser.should_receive(:show_rating_of).with('eminem')
       @parser.parse('what is eminem?')
     end
+    
+    it 'should throw error on invalid queries' do
+      (-> {@parser.parse('asd')}).should raise_error(SyntaxError)
+    end
   end
 end

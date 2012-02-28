@@ -67,6 +67,7 @@ module Lastfmtools
     
     private
 
+    # Returns a list or artist names.
     def get_tag_artists(tag)
       @lastfm.user.get_personal_tags(@user, tag, nil, 500).map do |artist|
         artist['name']

@@ -8,7 +8,7 @@ describe Lastfmtools::Backuper do
   
   describe '#get_changed_tags' do
     it 'should return tags that were changed since last check' do
-      response = fixture(:changed_tags)
+      response = fixture(:new_tags)
       response.each { |key, value| response[key] = value.size }
       @backuper.should_receive(:get_tags).and_return(response)
       changed_here = ['breakcore', 'raggacore', 'trip-hop', 'good', 'meh']
@@ -38,20 +38,30 @@ describe Lastfmtools::Backuper do
     end
   end
 
-  # describe '#sync_tags' do
-  #   it 'should sync tags' do
-  #     tags = @backuper.sync_tags
-  #     tags['punk'].should == ['Zebrahead']
-  #     tags['raggacore'].should == nil
-  #     tags['meh'].size.should == 2
-  # 
-  #     tags = @backuper.sync_tags
-  #     tags['punk'].should == nil
-  #     tags['raggacore'].should not_be_empty
-  #     tags['meh'].size.should == 3
-  #   end
-  # end
-  # 
+  describe '#sync_tags' do
+    it 'should sync tags' do
+      tags = fixture(:tags)
+      tags['punk'].should == ['Zebrahead', 'GG Allin']
+      tags['raggacore'].should == nil
+      tags['meh'].size.should == 2
+      
+      get_tags_response = fixture(:new_tags)
+      get_tags_response.each { |key, value| get_tags_response[key] = value.size }
+      changed_tags = ['breakcore', 'raggacore', 'trip-hop', 'good', 'meh']
+      get_tags_artists_response = fixture(:changed_tags)
+
+      @backuper.should_receive(:get_tags).and_return(get_tags_response)
+      @backuper.should_receive(:get_tags_artists).with(changed_tags).and_return(
+        get_tags_artists_response
+      )
+      @backuper.should_receive(:write_backup).with(
+        :tags, fixture(:new_tags)
+      ).and_return(true)
+  
+      synced_tags = @backuper.sync_tags
+    end
+  end
+
   # describe '#sync_artists' do
   #   it 'should sync artists' do
   #     artists.length.should == 5

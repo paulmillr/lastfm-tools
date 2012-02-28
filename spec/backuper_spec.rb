@@ -58,19 +58,26 @@ describe Lastfmtools::Backuper do
         :tags, fixture(:new_tags)
       ).and_return(true)
   
-      synced_tags = @backuper.sync_tags
+      @backuper.sync_tags
     end
   end
 
-  # describe '#sync_artists' do
-  #   it 'should sync artists' do
-  #     artists.length.should == 5
-  #     artists[0]['timestamp'].should == 1313503128
-  #     artists[5]['timestamp'].should == 1313503528
-  #     artists = @backuper.sync_artists
-  #     artists.length.should == 10
-  #     artists[5]['timestamp'].should == 1313503528
-  #     artists[10]['timestamp'].should == 1313504528
-  #   end
-  # end
+  describe '#sync_tracks' do
+    it 'should sync tracks' do
+      def sync_tracks
+        tracks = read_backup(:tracks)
+        last_timestamp = (tracks.last || {})['timestamp']
+        tracks.concat(get_tracks(last_timestamp).reverse.compact)
+        write_backup(:tracks, tracks)
+      end
+
+      @backuper.should_receive(:get_tracks).with(1313503528).and_return(
+        fixture(:new_tracks).reverse
+      )
+      @backuper.should_receive(:write_backup).with(
+        :tracks, fixture(:tracks).concat(fixture(:new_tracks))
+      )
+      @backuper.sync_tracks
+    end
+  end
 end

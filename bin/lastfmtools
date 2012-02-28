@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+require 'lastfm_tools'
+
+File.open(File.join(Dir::home, '.lastfm_tools'), 'r') do |file|
+  JSON.parse(file.read)
+end
+
+LastfmTools::QueryParser.new()

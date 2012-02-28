@@ -1,2 +1,2 @@
-## lastfmtools 0.1.0 (unreleased)
+## lastfm_tools 0.1.0 (unreleased)
 * Initial release

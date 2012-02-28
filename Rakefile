@@ -16,11 +16,11 @@ rescue Bundler::BundlerError => e
 end
 
 Jeweler::Tasks.new do |gem|
-  gem.name = "lastfmtools"
+  gem.name = "lastfm_tools"
   gem.summary = "Last.FM backuper, helper and data analyzer."
   gem.description = "A backuper, helper and data analyzer for Last.fm API 2.0"
   gem.email = "paul@paulmillr.com"
-  gem.homepage = "http://github.com/paulmillr/lastfmtools"
+  gem.homepage = "http://github.com/paulmillr/lastfm_tools"
   gem.authors = ["paulmillr"]
 end
 
@@ -34,7 +34,7 @@ Rake::RDocTask.new do |rdoc|
   version = File.read('VERSION')
 
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "lastfmtools #{version}"
+  rdoc.title = "lastfm_tools #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end

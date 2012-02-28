@@ -1,8 +1,8 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
-describe Lastfmtools::QueryParser do
+describe LastfmTools::QueryParser do
   before do
-    @parser = Lastfmtools::QueryParser.new
+    @parser = LastfmTools::QueryParser.new
   end
 
   describe '#parse' do

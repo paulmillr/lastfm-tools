@@ -1,5 +1,5 @@
 require 'json'
-require 'lastfmtools'
+require 'lastfm_tools'
 
 RSpec.configure do |config|
   def fixture_location

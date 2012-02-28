@@ -1,4 +1,4 @@
-# lastfmtools
+# lastfm_tools
 Last.FM backuper, helper and data analyzer.
 
 I'm using [last.fm](http://last.fm) to track statistics of
@@ -8,26 +8,26 @@ and more tracks with tags `awesome`, `good`, `meh` and `shit`.
 This software greatly facilitates statistics parsing and syncing.
 
 ## Installation
-`gem install lastfmtools` if you're using ruby 1.9.3 (other versions untested).
+`gem install lastfm_tools` if you're using ruby 1.9.3 (other versions untested).
 
 ## Command line API
 Command line API is very simple and speaks english. Also, it'll search for
-`.lastfmtools` file in your user directory and create it if it doesn't exist.
+`.lastfm_tools` file in your user directory and create it if it doesn't exist.
 
-* `lastfmtools sync` will sync tags user and tracks to local files in
+* `lastfm_tools sync` will sync tags user and tracks to local files in
 order to not mess around Last.FM API limits in the future.
-* `lastfmtools show best hip-hop artists` will print a list of 7 hip-hop
+* `lastfm_tools show best hip-hop artists` will print a list of 7 hip-hop
 artists i've listened to and which I tagged with tags `awesome` and `good`.
-* `lastfmtools show witch house artists I hadn't listened to` will print a
+* `lastfm_tools show witch house artists I hadn't listened to` will print a
 list of [tag's top artists](http://www.last.fm/tag/witch%20house/artists)
 that are not persist in my library yet.
-* `lastfmtools is eminem awesome?` will print `yep` or
+* `lastfm_tools is eminem awesome?` will print `yep` or
 `nope`, depended on tag used for `eminem` in tag library. Also works for
 `good`, `meh` and `shit`.
-* `lastfmtools what is eminem?` will print `It is awesome / good / meh / shit`.
+* `lastfm_tools what is eminem?` will print `It is awesome / good / meh / shit`.
 
-## `~/.lastfmtools`
-`.lastfmtools` is an application configuration file. Params it can contain:
+## `~/.lastfm_tools`
+`.lastfm_tools` is an application configuration file. Params it can contain:
 
 * api_key - Last.FM API key, can be received here http://www.last.fm/api/account.
 * api_secret - Last.FM API secret.
@@ -35,7 +35,7 @@ that are not persist in my library yet.
 data.
 
 ## Contributing
-* Clone lastfmtools repo from github.
+* Clone lastfm_tools repo from github.
 * Change the code.
 * Install it via `rake install`.
 * Run tests: `rake spec`.

@@ -1,8 +1,8 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
-describe Lastfmtools::Analyzer do
+describe LastfmTools::Analyzer do
   before do
-    @analyzer = Lastfmtools::Analyzer.new(:tags => fixture('tags'))
+    @analyzer = LastfmTools::Analyzer.new(tags: fixture('tags'))
   end
 
   describe '#intersect_tags' do

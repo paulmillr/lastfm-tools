@@ -1,2 +1,3 @@
 *.pyc
 pkg/
+.DS_Store

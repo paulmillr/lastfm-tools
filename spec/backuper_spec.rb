@@ -1,8 +1,10 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
-describe Lastfmtools::Backuper do
+describe LastfmTools::Backuper do
   before do
-    @backuper = Lastfmtools::Backuper.new(fixture_location, 'fake_key', 'secret')
+    @backuper = LastfmTools::Backuper.new(
+      fixture_location, 'fake_key', 'secret'
+    )
     @backuper.user = 'test'
   end
   
@@ -44,9 +46,12 @@ describe Lastfmtools::Backuper do
       tags['punk'].should == ['Zebrahead', 'GG Allin']
       tags['raggacore'].should == nil
       tags['meh'].size.should == 2
-      
+
       get_tags_response = fixture(:new_tags)
-      get_tags_response.each { |key, value| get_tags_response[key] = value.size }
+      get_tags_response.each do |key, value|
+        get_tags_response[key] = value.size
+      end
+
       changed_tags = ['breakcore', 'raggacore', 'trip-hop', 'good', 'meh']
       get_tags_artists_response = fixture(:changed_tags)
 

@@ -1,4 +1,4 @@
-module Lastfmtools
+module LastfmTools
   class QueryParser
     def initialize
       @analyzer = Analyzer.new({})

@@ -1,8 +1,12 @@
 module LastfmTools
   class QueryParser
-    def initialize
-      @analyzer = Analyzer.new({})
-      @backuper = Backuper.new(1, 2, 3)
+    def initialize(options = {})
+      @backuper = Backuper.new(
+        options[:backup_location] || '',
+        options[:api_key] || '',
+        options[:api_secret] || ''
+      )
+      read_backups
     end
 
     # Public: Parses query and does appropriate actions.
@@ -38,6 +42,12 @@ module LastfmTools
     end
 
     private
+    
+    def read_backups
+      tracks = @backuper.read_backup(:tracks)
+      tags = @backuper.read_backup(:tags)
+      @analyzer = Analyzer.new(tracks: tracks, tags: tags)
+    end
 
     def ratings_regex
       (Analyzer::RATINGS << Analyzer::BEST).join('|')
@@ -58,6 +68,7 @@ module LastfmTools
 
     def sync
       @backuper.sync
+      read_backups
       'Everything synced.'
     end
 

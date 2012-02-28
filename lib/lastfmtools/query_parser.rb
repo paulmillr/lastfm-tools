@@ -5,6 +5,21 @@ module Lastfmtools
       @backuper = Backuper.new(1, 2, 3)
     end
 
+    # Public: Parses query and does appropriate actions.
+    # 
+    # query - query in english.
+    # 
+    # Examples
+    # 
+    #   parse('show good punk artists')
+    #   # => 'Zebrahead, H2O'
+    #   parse('sync')
+    #   # => 'Everything synced.'
+    #   parse('is eminem shit?')
+    #   # => 'Nope.'
+    # 
+    # Returns string with result of query execution.
+    # Raises SyntaxError if query has unusual syntax.
     def parse(query)
       case query
       when /is (.+) (#{ratings_regex})\?/

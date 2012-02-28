@@ -6,11 +6,16 @@ module Lastfmtools
     PAGE_SIZE = 150
     attr_accessor :user
 
+    # Examples
+    # 
+    #   backuper = Lastfmtools::Backuper.new(path, 'key', 'secret')
+    #   backuper.user = 'paulmillr'
+    # 
     def initialize(backup_location, api_key, api_secret)
       @backup_location = backup_location
       @lastfm = Lastfm.new(api_key, api_secret)
     end
-    
+
     def get_backup_path(type)
       File.join(@backup_location, "#{type}.json")
     end
@@ -48,7 +53,7 @@ module Lastfmtools
     # 
     #   write_backup(:tags, {'punk' => ['Zebrahead']})
     #   write_backup(:tracks, [{"artist": "Aphex Twin",
-    #     "track": "55", "timestamp": 1313504528}])
+    #     "track": "5", "timestamp": 1313504528}])
     # 
     def write_backup(type, data)
       File.open(get_backup_path(type), 'w') do |file|
@@ -91,7 +96,16 @@ module Lastfmtools
     
     private
 
-    # Returns a list or artist names.
+    # Private: Download artists that user tagged with tag from Last.FM.
+    # 
+    # tag - title of last.fm tag.
+    # 
+    # Examples
+    # 
+    #   get_tag_artists('punk')
+    #   # => ['Zebrahead']
+    # 
+    # Returns a list of artist names.
     def get_tag_artists(tag)
       @lastfm.user.get_personal_tags(@user, tag, nil, 500).map do |artist|
         artist['name']
@@ -101,7 +115,7 @@ module Lastfmtools
       retry
     end
 
-    # Private: Download tag data from Last.FM.
+    # Private: Download tag data for all tags from Last.FM.
     # 
     # with_count - should it also return a count of tagged artists?
     # 
@@ -125,7 +139,18 @@ module Lastfmtools
         top.map { |tag| tag['name'].downcase }
       end
     end
-  
+
+    # Private: Download tag data for specified tags from Last.FM.
+    # 
+    # tags - array of strings (tags).
+    # 
+    # Examples
+    # 
+    #   get_tags_artists(['punk', 'hip-hop'])
+    #   # => {'punk' => ['Zebrahead'], 'hip-hop' => ['Eminem']}
+    # 
+    # Returns a hash, where keys are tag names and values are
+    # arrays of artists which were tagged by tag.
     def get_tags_artists(tags)
       Hash[tags.map { |tag| [tag, get_tag_artists(tag)] }]
     end
@@ -176,7 +201,7 @@ module Lastfmtools
     # Private: Downloads from Last.FM API page with tracks listened by user.
     # 
     # page - which page should it download.
-    # timestamp - optional, since what time should it download data.
+    # timestamp - optional, since what time it should download data.
     # 
     # Examples
     # 
@@ -199,6 +224,16 @@ module Lastfmtools
       convert_recent_tracks(tracks)
     end
 
+    # Private: Downloads all recent tracks of user.
+    # 
+    # timestamp - optional, since what time it should download data
+    # 
+    # Examples
+    # 
+    #   get_tracks(1313504528)
+    #   # => [{"artist": "Aphex Twin", "track": "5", "timestamp": 1313504528}])
+    # 
+    # Returns a list of hashes with track information.
     def get_tracks(timestamp = nil)
       tracks = []
       previous_page_tracks = []

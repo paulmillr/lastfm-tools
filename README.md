@@ -1,4 +1,4 @@
-# Lastfmtools
+# lastfmtools
 Last.FM backuper, helper and data analyzer.
 
 I'm using [last.fm](http://last.fm) to track statistics of

@@ -1,9 +1,11 @@
-require 'lastfm/backuper'
-
-class Lastfmtools
+module Lastfmtools
   class Analyzer
-    def initialize(tags_map)
-      @tags_map = tags_map
+    RATINGS = ['shit', 'meh', 'good', 'awesome']
+
+    def initialize(options = {})
+      @tracks = options[:tracks] || []
+      @tags = options[:tags] || {}
+      @tags.default = []
     end
 
     # Public: Selects artists that were tagged by all selected tags.
@@ -19,13 +21,29 @@ class Lastfmtools
     # 
     # Returns an array of matched artists.
     def intersect_tags(*tags)
-      tags.map {|tag| @tags_map[tag]}.reduce do |memo, tag|
+      tags.map {|tag| @tags[tag]}.reduce do |memo, tag|
         memo & tag
       end
     end
 
-    def tagged_with?(artist, tag)
-      @tags_map[tag].include?(artist)
+    # Public: Shows if some artist was tagged by tag.
+    # 
+    # Examples
+    # 
+    #   tagged_with('punk', 'Zebrahead')
+    #   # => true
+    #   tagged_with('not-existing-tag', 'non-existing-artist')
+    #   # => false
+    # 
+    # Returns boolean value.
+    def tagged_with?(tag, artist)
+      @tags[tag].include?(artist)
+    end
+
+    def best_of_tag(tag, limit = 7)
+      awesome = intersect_tags(tag, RATINGS.last)
+      good = intersect_tags(tag, RATINGS[RATINGS.size - 2])
+      awesome.concat(good)[0..limit]
     end
 
     def to_s

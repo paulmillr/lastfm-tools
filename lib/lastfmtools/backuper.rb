@@ -1,89 +1,159 @@
 require 'json'
 require 'lastfm'
 
-class Lastfmtools
+module Lastfmtools
   class Backuper
+    PAGE_SIZE = 150
     attr_accessor :user
-  
-    def self.read_tags_backup
-      File.open(TAGS_PATH, 'r') {|file| JSON.parse(file.read)}
-    end
 
-    def self.write_tags_backup(tags)
-      File.open(TAGS_PATH, 'w') do |file|
-        file.write(JSON.pretty_generate(tags))
-      end
-    end
-
-    def initialize(api_key, api_secret, token)
+    def initialize(backup_location, api_key, api_secret)
+      @backup_location = backup_location
       @lastfm = Lastfm.new(api_key, api_secret)
-      begin
-        @lastfm.session = @lastfm.auth.get_session(token)['key']
-      rescue Lastfm::ApiError
-        puts 'Invalid token. Go to'
-        puts "http://www.last.fm/api/auth/?api_key=#{api_key}&token=#{token}"
+      # begin
+      #   @lastfm.session = @lastfm.auth.get_session(token)['key']
+      # rescue Lastfm::ApiError
+      #   puts 'Invalid token. Go to'
+      #   puts "http://www.last.fm/api/auth/?api_key=#{api_key}&token=#{token}"
+      # end
+    end
+    
+    def get_backup_path(type)
+      File.join(@backup_location, "#{type}.json")
+    end
+
+    # Example
+    # 
+    #   read_backup(:tags)
+    #   read_backup(:tracks)
+    # 
+    def read_backup(type)
+      File.open(get_backup_path(type), 'r') do |file|
+        JSON.parse(file.read)
       end
+    rescue Errno::ENOENT
+      case type
+      when :tracks then []
+      else {}
+      end
+    end
+
+    def write_backup(type, data)
+      File.open(get_backup_path(type), 'w') do |file|
+        file.write(JSON.pretty_generate(data))
+      end
+      true
     end
 
     def get_tag_artists(tag)
-      puts "Getting artists for #{tag}"
-      begin
-        @lastfm.user.get_personal_tags(@user, tag, nil, 500).map do |artist|
-          artist['name']
-        end
-      rescue Lastfm::ApiError
-        sleep 15
-        retry
+      @lastfm.user.get_personal_tags(@user, tag, nil, 500).map do |artist|
+        artist['name']
       end
+    rescue Lastfm::ApiError
+      sleep 15
+      retry
     end
   
-    def get_tags(with_count=false)
+    def get_tags(with_count = false)
       top = @lastfm.user.get_top_tags(@user, 500)
 
       if with_count
-        array_to_hash top.map {|tag| [tag['name'].downcase, tag['count'].to_i]}
+        Hash[top.map {|tag| [tag['name'].downcase, tag['count'].to_i]}]
       else
         top.map {|tag| tag['name'].downcase}
       end
     end
   
     def get_tags_artists(tags)
-      array_to_hash(tags.map {|tag| [tag, get_tag_artists(tag)]})
+      Hash[tags.map {|tag| [tag, get_tag_artists(tag)]}]
     end
   
     def get_changed_tags
-      old_tags = Backuper::read_tags_backup
+      old_tags = read_backup(:tags)
       new_tags = get_tags(true)
 
       changed_there = new_tags.select do |tag, count|
-        !old_tags.include?(tag) || old_tags[tag].size != count
+        !old_tags.has_key?(tag) || old_tags[tag].size != count
       end.map {|tag, count| tag}
 
       changed_here = old_tags.select do |tag, artists|
-        !new_tags.include?(tag)
+        !new_tags.has_key?(tag)
       end.map {|tag, artists| tag}
 
       [changed_there, changed_here]
     end
-  
+
     def sync_tags
-      tags = Backuper::read_tags_backup
+      tags = read_backup(:tags)
       changed_there, changed_here = get_changed_tags
 
       get_tags_artists(changed_there).each do |tag, artists|
-       tags[tag] = artists
+        tags[tag] = artists
+      end
+      
+      tags.reject! do |tag, artists|
+        changed_here.include?(tag)
       end
 
-      changed_here.each do |tag|
-        tags.delete(tag)
-      end
+      write_backup(:tags, tags)
+    end
 
-      Backuper::write_tags_backup(tags)
+    # Private: Remove not needed data from lastfm query result.
+    # 
+    # tracks - array of hashes, result of @lastfm.user.get_recent_tracks().
+    # 
+    # Returns hash, where keys are timestamps and values are hashes with
+    # fields 'artist' and 'track'.
+    def convert_recent_tracks(tracks)
+      tracks.map do |track|
+        next if track['nowplaying']
+        {
+          'timestamp' => track['date']['uts'].to_i,
+          'artist' => track['artist']['content'],
+          'track' => track['name']
+        }
+      end
+    end
+    
+    def get_tracks_page(page, timestamp = nil)
+      puts "Downloading page #{page}"
+      begin
+        tracks = if timestamp
+          @lastfm.user.get_recent_tracks(@user, PAGE_SIZE, page, nil, timestamp)
+        else
+          @lastfm.user.get_recent_tracks(@user, PAGE_SIZE, page)
+        end
+      rescue Lastfm::APIError
+        sleep 10
+        retry
+      end
+      convert_recent_tracks(tracks)
+    end
+
+    def get_tracks(timestamp = nil)
+      tracks = []
+      previous_page_tracks = []
+      page = 0
+      loop do
+        page += 1
+        current_page_tracks = get_tracks_page(page, timestamp)
+        break if previous_page_tracks == current_page_tracks
+        tracks.concat(current_page_tracks)
+        previous_page_tracks = current_page_tracks
+      end
+      tracks
+    end
+
+    def sync_tracks
+      tracks = read_backup(:tracks)
+      last_timestamp = (tracks.last || {})['timestamp']
+      puts 'Last timestamp', last_timestamp
+      tracks.concat(get_tracks(last_timestamp).reverse.compact)
+      write_backup(:tracks, tracks)
     end
 
     def sync
-      # sync_artists
       sync_tags
+      sync_tracks
     end
   end
 end

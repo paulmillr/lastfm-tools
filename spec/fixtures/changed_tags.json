@@ -1,0 +1,15 @@
+{
+  "breakcore": ["Igorrr"],
+  "ebm": ["Ayria"],
+  "filthstep": ["iBenji"],
+  "grindcore": ["Bredor"],
+  "glitch": ["Hrvatski", "Aurastys"],
+  "raggacore": ["Renard"],
+  "trip-hop": ["Massive Attack", "Tricky"],
+  "ska punk": ["Streetlight Manifesto"],
+
+  "awesome": ["Renard"],
+  "good": ["Igorrr", "Ayria", "Hrvatski", "iBenji", "Aurastys"],
+  "meh": ["GG Allin", "Bredor", "Tricky"],
+  "shit": ["Massive Attack"]
+}

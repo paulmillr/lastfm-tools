@@ -1,6 +1,13 @@
 # Lastfmtools
 Last.FM backuper, helper and data analyzer.
- 
+
+## Contributing
+* Clone lastfmtools repo from github.
+* Change the code.
+* Install it via `rake install`.
+* Run tests: `rake spec`.
+* Make pull request if you want.
+
 ## License
 Copyright (c) Paul Miller (http://paulmillr.com)
 

@@ -1,9 +1,6 @@
-require 'lastfmtools'
+require 'lastfmtools/analyzer'
+require 'lastfmtools/backuper'
 
-class Lastfmtools
-  #TAGS_PATH = File.path('/Users/paul/Development/things/lastfm_tags.json')
-  
-  def initialize(directory_path)
-    
-  end
+module Lastfmtools
+  # File.path('/Users/paul/Development/things/lastfm/')
 end

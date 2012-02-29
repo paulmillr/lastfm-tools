@@ -2,7 +2,7 @@ require 'json'
 require 'lastfm'
 require 'set'
 
-module LastfmTools
+class LastfmTools
   class Backuper
     PAGE_SIZE = 150
     attr_accessor :user

@@ -1,8 +1,5 @@
-module LastfmTools
+class LastfmTools
   class Analyzer
-    BEST = 'best'
-    RATINGS = ['shit', 'meh', 'good', 'awesome']
-
     def initialize(options = {})
       @tracks = options[:tracks] || []
       @tags = options[:tags] || {}
@@ -38,7 +35,14 @@ module LastfmTools
     # 
     # Returns boolean value.
     def tagged_with?(tag, artist)
-      tag == BEST ? best?(artist) : @tags[tag].include?(artist)
+      if tag == BEST_RATING
+        best_artist?(artist)
+      else
+        # This should ignore case.
+        !!@tags[tag].select do |tag_artist|
+          tag_artist.downcase == artist
+        end
+      end
     end
 
     # Examples
@@ -49,8 +53,12 @@ module LastfmTools
     #   # => 
     # 
     # 
-    def show_artists(rating, genre, listened_to = false)
-      
+    def show_artists(rating, genre)
+      if rating == BEST_RATING
+        get_best_artists(genre)
+      else
+        intersect_tags(rating, genre)
+      end
     end
 
     # Public: Shows rating of artist.
@@ -101,9 +109,19 @@ module LastfmTools
     def good
       RATINGS[RATINGS.size - 2]
     end
+    
+    def best_consists_of
+      [awesome, good]
+    end
 
-    def best?(artist)
-      tagged_with?(awesome) || tagged_with?(good)
+    def best_artist?(artist)
+      best = false
+      best_consists_of.map { |rating| best ||= tagged_with?(rating, artist) }
+      best
+    end
+    
+    def get_best_artists(genre)
+      best_consists_of.map { |rating| intersect_tags(rating, genre) }.flatten
     end
   end
 end

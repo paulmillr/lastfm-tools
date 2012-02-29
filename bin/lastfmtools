@@ -1,7 +1,12 @@
 #!/usr/bin/env ruby
 require 'lastfm_tools'
 
-parser = LastfmTools::QueryParser.new(LastfmTools::read_config)
-ARGV.join(' ').split("\n").map do |query|
-  parser.parse(query)
+if ARGV.empty?
+  puts 'Usage: lastfmtools query'
+  puts 'Example: lastfmtools is eminem shit?'
+else
+  parser = LastfmTools::QueryParser.new(LastfmTools::read_config)
+  ARGV.map do |query|
+    puts parser.parse(query)
+  end
 end

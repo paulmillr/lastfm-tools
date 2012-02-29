@@ -1,4 +1,4 @@
-module LastfmTools
+class LastfmTools
   class QueryParser
     def initialize(options = {})
       @backuper = Backuper.new(
@@ -6,6 +6,7 @@ module LastfmTools
         options[:api_key] || '',
         options[:api_secret] || ''
       )
+      @backuper.user = options[:user]
       read_backups
     end
 
@@ -50,7 +51,7 @@ module LastfmTools
     end
 
     def ratings_regex
-      (Analyzer::RATINGS << Analyzer::BEST).join('|')
+      (RATINGS.clone << BEST_RATING).join('|')
     end
     
     def show_artists(rating, genre)
@@ -58,12 +59,16 @@ module LastfmTools
     end
     
     def show_top_site_artists(genre)
-      @analyzer.show_top_site_artists(genre).join(', ')
+      @backuper.get_top_site_artists(genre).join(', ')
     end
-    
+
     def show_rating_of(artist)
       rating = @analyzer.show_rating_of(artist)
-      "#{artist} is #{rating}."
+      if rating
+        "#{artist} is #{rating}."
+      else
+        'There\'s no such artist in your library.'
+      end
     end
 
     def sync

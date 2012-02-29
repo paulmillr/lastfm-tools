@@ -5,7 +5,7 @@ I'm using [last.fm](http://last.fm) to track statistics of
 music i've listened to. Basically I tag all artists of which i've listened five
 and more tracks with tags `awesome`, `good`, `meh` and `shit`.
 
-This software greatly facilitates statistics parsing and syncing.
+This software greatly facilitates statistics parsing, syncing and sharing great artists with friends.
 
 ## Installation
 `gem install lastfm_tools` if you're using ruby 1.9.3 (other versions untested).
@@ -14,17 +14,19 @@ This software greatly facilitates statistics parsing and syncing.
 Command line API is very simple and speaks english. Also, it'll search for
 `.lastfm_tools` file in your user directory and create it if it doesn't exist.
 
-* `lastfm_tools sync` will sync tags user and tracks to local files in
+Usage is: `lastfmtools "query"`. Example queries:
+
+* `sync` will sync tags user and tracks to local files in
 order to not mess around Last.FM API limits in the future.
-* `lastfm_tools show best hip-hop artists` will print a list of 7 hip-hop
+* `show best hip-hop artists` will print a list of 7 hip-hop
 artists i've listened to and which I tagged with tags `awesome` and `good`.
-* `lastfm_tools show witch house artists I hadn't listened to` will print a
+* `show witch house artists I hadn't listened to` will print a
 list of [tag's top artists](http://www.last.fm/tag/witch%20house/artists)
 that are not persist in my library yet.
-* `lastfm_tools is eminem awesome?` will print `yep` or
-`nope`, depended on tag used for `eminem` in tag library. Also works for
+* `is eminem awesome?` will print `yep` or
+`nope`, depending on tag used for `eminem` in tag library. Also works for
 `good`, `meh` and `shit`.
-* `lastfm_tools what is eminem?` will print `It is awesome / good / meh / shit`.
+* `what is eminem?` will print `eminem is awesome / good / meh / shit`.
 
 ## `~/.lastfm_tools`
 `.lastfm_tools` is an application configuration file. Params it can contain:

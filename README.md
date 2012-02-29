@@ -10,6 +10,8 @@ This software greatly facilitates statistics parsing, syncing and sharing great 
 ## Installation
 `gem install lastfm_tools` if you're using ruby 1.9.3 (other versions untested).
 
+(temporary doesn't work)
+
 ## Command line API
 Command line API is very simple and speaks english. Also, it'll search for
 `.lastfm_tools` file in your user directory and create it if it doesn't exist.
@@ -17,7 +19,8 @@ Command line API is very simple and speaks english. Also, it'll search for
 Usage is: `lastfmtools "query"`. Example queries:
 
 * `sync` will sync tags user and tracks to local files in
-order to not mess around Last.FM API limits in the future.
+order to not mess around Last.FM API limits in the future. Backup format
+is JSON.
 * `show best hip-hop artists` will print a list of 7 hip-hop
 artists i've listened to and which I tagged with tags `awesome` and `good`.
 * `show witch house artists I hadn't listened to` will print a
@@ -29,12 +32,23 @@ that are not persist in my library yet.
 * `what is eminem?` will print `eminem is awesome / good / meh / shit`.
 
 ## `~/.lastfm_tools`
-`.lastfm_tools` is an application configuration file. Params it can contain:
+`.lastfm_tools` is an application YAML configuration file. Params it can
+contain:
 
-* api_key - Last.FM API key, can be received here http://www.last.fm/api/account.
-* api_secret - Last.FM API secret.
-* backup_location - location to directory which will contain all your synced
+* :api_key - Last.FM API key, can be received here http://www.last.fm/api/account.
+* :api_secret - Last.FM API secret.
+* :backup_location - location to directory which will contain all your synced
 data.
+* :user -- your Last.FM username.
+
+Example:
+
+```
+:api_key: '18882c02ea1e4ef8c8f1ecd68076b423'
+:api_secret: 'fafc664d6c2cf58f1453f6fba4d18d38'
+:backup_location: '/Users/paul/Development/things/lastfm/'
+:user: 'docbay0'
+```
 
 ## Contributing
 * Clone lastfm_tools repo from github.

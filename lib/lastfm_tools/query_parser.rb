@@ -27,6 +27,23 @@ class LastfmTools
     # Raises SyntaxError if query has unusual syntax.
     def parse(query)
       case query
+      when /--help/
+        <<-EOF
+Usage is: `lastfmtools "query"`. Example queries:
+
+* `sync` will sync tags user and tracks to local files in
+order to not mess around Last.FM API limits in the future. Backup format
+is JSON.
+* `show best hip-hop artists` will print a list of 7 hip-hop
+artists i've listened to and which I tagged with tags `awesome` and `good`.
+* `show witch house artists I hadn't listened to` will print a
+list of [tag's top artists](http://www.last.fm/tag/witch%20house/artists)
+that are not persist in my library yet.
+* `is eminem awesome?` will print `yep` or
+`nope`, depending on tag used for `eminem` in tag library. Also works for
+`good`, `meh` and `shit`.
+* `what is eminem?` will print `eminem is awesome / good / meh / shit`.
+EOF
       when /is (.+) (#{ratings_regex})\?/
         tagged_with($2, $1)
       when /show (#{ratings_regex}) (.+) artists/

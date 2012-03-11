@@ -22,6 +22,7 @@ Jeweler::Tasks.new do |gem|
   gem.email = "paul@paulmillr.com"
   gem.homepage = "http://github.com/paulmillr/lastfm_tools"
   gem.authors = ["paulmillr"]
+  gem.executables = ["lastfmtools"]
 end
 
 RSpec::Core::RakeTask.new(:spec) do |spec|

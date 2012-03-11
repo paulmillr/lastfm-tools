@@ -1,2 +1,2 @@
-## lastfm_tools 0.1.0 (unreleased)
+## lastfm_tools 1.0.0 (March 11, 2012)
 * Initial release

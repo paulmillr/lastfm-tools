@@ -23,7 +23,6 @@ Jeweler::Tasks.new do |gem|
   gem.homepage = "http://github.com/paulmillr/lastfm_tools"
   gem.authors = ["paulmillr"]
   gem.executables = ["lastfmtools"]
-  gem.add_dependency 'lastfm', '1.4.0'
 end
 
 RSpec::Core::RakeTask.new(:spec) do |spec|

@@ -10,8 +10,6 @@ This software greatly facilitates statistics parsing, syncing and sharing great 
 ## Installation
 `gem install lastfm_tools` if you're using ruby 1.9.3 (other versions untested).
 
-(temporary doesn't work)
-
 ## Command line API
 Command line API is very simple and speaks english. Also, it'll search for
 `.lastfm_tools` file in your user directory and create it if it doesn't exist.

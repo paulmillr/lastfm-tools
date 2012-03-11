@@ -44,7 +44,7 @@ Example:
 ```
 :api_key: '18882c02ea1e4ef8c8f1ecd68076b423'
 :api_secret: 'fafc664d6c2cf58f1453f6fba4d18d38'
-:backup_location: '/Users/paul/Development/things/lastfm/'
+:backup_location: '/Users/paul/Documents/lastfm-backups/'
 :user: 'docbay0'
 ```
 

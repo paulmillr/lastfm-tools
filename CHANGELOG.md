@@ -1,3 +1,6 @@
+## lastfm_tools 1.0.3 (March 11, 2012)
+* Added unicode support to tagged_with?
+
 ## lastfm_tools 1.0.2 (March 11, 2012)
 * Added `--help` command.
 

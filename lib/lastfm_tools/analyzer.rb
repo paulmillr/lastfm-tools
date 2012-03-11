@@ -1,3 +1,5 @@
+require 'unicode_utils'
+
 class LastfmTools
   class Analyzer
     def initialize(options = {})
@@ -40,7 +42,7 @@ class LastfmTools
       else
         # This should ignore case.
         @tags[tag].select do |tag_artist|
-          tag_artist.downcase == artist.downcase
+          UnicodeUtils.downcase(tag_artist) == UnicodeUtils.downcase(artist)
         end.size > 0
       end
     end

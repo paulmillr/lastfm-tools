@@ -1,6 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'lastfm', '1.4.0'
+gem 'unicode_utils', '1.3.0'
 
 group :development do
   gem 'rspec', '~> 2.8.0'

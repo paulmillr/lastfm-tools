@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
     "Rakefile",
     "VERSION",
     "bin/lastfmtools",
+    "lastfm_tools.gemspec",
     "lib/lastfm_tools.rb",
     "lib/lastfm_tools/analyzer.rb",
     "lib/lastfm_tools/backuper.rb",
@@ -53,17 +54,20 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<rspec>, ["~> 2.8.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.8.3"])
       s.add_development_dependency(%q<rdoc>, [">= 0"])
+      s.add_runtime_dependency(%q<lastfm>, ["= 1.4.0"])
     else
       s.add_dependency(%q<lastfm>, ["= 1.4.0"])
       s.add_dependency(%q<rspec>, ["~> 2.8.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.8.3"])
       s.add_dependency(%q<rdoc>, [">= 0"])
+      s.add_dependency(%q<lastfm>, ["= 1.4.0"])
     end
   else
     s.add_dependency(%q<lastfm>, ["= 1.4.0"])
     s.add_dependency(%q<rspec>, ["~> 2.8.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.8.3"])
     s.add_dependency(%q<rdoc>, [">= 0"])
+    s.add_dependency(%q<lastfm>, ["= 1.4.0"])
   end
 end
 

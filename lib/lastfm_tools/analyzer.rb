@@ -39,9 +39,9 @@ class LastfmTools
         best_artist?(artist)
       else
         # This should ignore case.
-        !!@tags[tag].select do |tag_artist|
-          tag_artist.downcase == artist
-        end
+        @tags[tag].select do |tag_artist|
+          tag_artist.downcase == artist.downcase
+        end.size > 0
       end
     end
 

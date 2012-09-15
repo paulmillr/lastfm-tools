@@ -22,7 +22,7 @@ describe LastfmTools::Analyzer do
       @analyzer.tagged_with?('yep', 'nope').should == false
     end
   end
-  
+
   describe '#best' do
     it 'should select best tag artists' do
       @analyzer.best_of_tag('breakcore').should == ['Renard', 'Igorrr']

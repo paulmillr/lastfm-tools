@@ -7,7 +7,7 @@ describe LastfmTools::Backuper do
     )
     @backuper.user = 'test'
   end
-  
+
   describe '#get_changed_tags' do
     it 'should return tags that were changed since last check' do
       response = fixture(:new_tags)
@@ -20,7 +20,7 @@ describe LastfmTools::Backuper do
       ]
     end
   end
-  
+
   describe '#convert_recent_tracks' do
     it 'should strip not-needed fields' do
       data = fixture(:recent_tracks)
@@ -31,7 +31,7 @@ describe LastfmTools::Backuper do
         'track' => 'Insect Calm',
         'timestamp' => 1330381367
       }
-      
+
       tracks[3].should == {
         'artist' => 'Ayria',
         'track' => 'My Poison',
@@ -62,7 +62,7 @@ describe LastfmTools::Backuper do
       @backuper.should_receive(:write_backup).with(
         :tags, fixture(:new_tags)
       ).and_return(true)
-  
+
       @backuper.sync_tags
     end
   end

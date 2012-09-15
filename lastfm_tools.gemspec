@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "lastfm_tools"
-  s.version = "1.0.3"
+  s.version = "1.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["paulmillr"]
-  s.date = "2012-03-11"
+  s.date = "2012-09-15"
   s.description = "A backuper, helper and data analyzer for Last.fm API 2.0"
   s.email = "paul@paulmillr.com"
   s.executables = ["lastfmtools"]
@@ -29,7 +29,6 @@ Gem::Specification.new do |s|
     "lib/lastfm_tools.rb",
     "lib/lastfm_tools/analyzer.rb",
     "lib/lastfm_tools/backuper.rb",
-    "lib/lastfm_tools/query_parser.rb",
     "spec/analyzer_spec.rb",
     "spec/backuper_spec.rb",
     "spec/fixtures/changed_tags.json",
@@ -38,12 +37,11 @@ Gem::Specification.new do |s|
     "spec/fixtures/recent_tracks.json",
     "spec/fixtures/tags.json",
     "spec/fixtures/tracks.json",
-    "spec/query_parser_spec.rb",
     "spec/spec_helper.rb"
   ]
   s.homepage = "http://github.com/paulmillr/lastfm_tools"
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.11"
+  s.rubygems_version = "1.8.23"
   s.summary = "Last.FM backuper, helper and data analyzer."
 
   if s.respond_to? :specification_version then
@@ -52,21 +50,24 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<lastfm>, ["= 1.4.0"])
       s.add_runtime_dependency(%q<unicode_utils>, ["= 1.3.0"])
-      s.add_development_dependency(%q<rspec>, ["~> 2.8.0"])
-      s.add_development_dependency(%q<jeweler>, ["~> 1.8.3"])
+      s.add_runtime_dependency(%q<rb-appscript>, ["= 0.6.1"])
+      s.add_development_dependency(%q<rspec>, ["~> 2.11.0"])
+      s.add_development_dependency(%q<jeweler>, ["~> 1.8.4"])
       s.add_development_dependency(%q<rdoc>, [">= 0"])
     else
       s.add_dependency(%q<lastfm>, ["= 1.4.0"])
       s.add_dependency(%q<unicode_utils>, ["= 1.3.0"])
-      s.add_dependency(%q<rspec>, ["~> 2.8.0"])
-      s.add_dependency(%q<jeweler>, ["~> 1.8.3"])
+      s.add_dependency(%q<rb-appscript>, ["= 0.6.1"])
+      s.add_dependency(%q<rspec>, ["~> 2.11.0"])
+      s.add_dependency(%q<jeweler>, ["~> 1.8.4"])
       s.add_dependency(%q<rdoc>, [">= 0"])
     end
   else
     s.add_dependency(%q<lastfm>, ["= 1.4.0"])
     s.add_dependency(%q<unicode_utils>, ["= 1.3.0"])
-    s.add_dependency(%q<rspec>, ["~> 2.8.0"])
-    s.add_dependency(%q<jeweler>, ["~> 1.8.3"])
+    s.add_dependency(%q<rb-appscript>, ["= 0.6.1"])
+    s.add_dependency(%q<rspec>, ["~> 2.11.0"])
+    s.add_dependency(%q<jeweler>, ["~> 1.8.4"])
     s.add_dependency(%q<rdoc>, [">= 0"])
   end
 end

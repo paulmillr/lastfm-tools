@@ -3,7 +3,7 @@ Last.FM backuper, helper and data analyzer.
 
 I'm using [last.fm](http://last.fm) to track statistics of
 music i've listened to. Basically I tag all artists of which i've listened five
-and more tracks with tags `awesome`, `good`, `meh` and `shit`.
+and more tracks with tags `good`, `meh` and `shit`.
 
 This software greatly facilitates statistics parsing, syncing and sharing great artists with friends.
 
@@ -19,6 +19,8 @@ Usage is: `lastfmtools "query"`. Example queries:
 * `sync` will sync tags user and tracks to local files in
 order to not mess around Last.FM API limits in the future. Backup format
 is JSON.
+* `sync with itunes` will adjust tracks listen count in iTunes and
+it will be equal to tracks listen count on last.fm.
 * `show best hip-hop artists` will print a list of 7 hip-hop
 artists i've listened to and which I tagged with tags `awesome` and `good`.
 * `show witch house artists I hadn't listened to` will print a
@@ -64,10 +66,10 @@ in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
- 
+
 The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE

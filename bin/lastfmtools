@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
 require 'lastfm_tools'
 
-parser = LastfmTools::QueryParser.new(LastfmTools::read_config)
+lastfm = LastfmTools.new
 if ARGV.empty?
-  puts parser.parse('--help')
+  puts lastfm.parse('--help')
 else
   ARGV.map do |query|
-    puts parser.parse(query)
+    puts lastfm.parse(query)
   end
 end

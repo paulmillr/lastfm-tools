@@ -25,10 +25,9 @@ describe LastfmTools::Analyzer do
 
   describe '#best' do
     it 'should select best tag artists' do
-      @analyzer.best_of_tag('breakcore').should == ['Renard', 'Igorrr']
-      @analyzer.best_of_tag('breakcore').should == ['Renard', 'Igorrr']
+      @analyzer.best_of_tag('breakcore').should == ['Igorrr']
       @analyzer.best_of_tag('glitch').should == ['Hrvatski', 'Aurastys']
-      @analyzer.best_of_tag('grindcore').should be_empty
+      @analyzer.best_of_tag('grindcore').should == ['Bredor']
     end
   end
 end

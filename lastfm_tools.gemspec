@@ -37,6 +37,7 @@ Gem::Specification.new do |s|
     "spec/fixtures/recent_tracks.json",
     "spec/fixtures/tags.json",
     "spec/fixtures/tracks.json",
+    "spec/lastfm_tools_spec.rb",
     "spec/spec_helper.rb"
   ]
   s.homepage = "http://github.com/paulmillr/lastfm_tools"

@@ -1,8 +1,8 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
-describe LastfmTools::QueryParser do
+describe LastfmTools do
   before do
-    @parser = LastfmTools::QueryParser.new({})
+    @parser = LastfmTools.new
   end
 
   describe '#parse' do
@@ -24,8 +24,8 @@ describe LastfmTools::QueryParser do
     end
 
     it 'should parse tagged_with query' do
-      @parser.should_receive(:tagged_with).with('awesome', 'eminem')
-      @parser.parse('is eminem awesome?')
+      @parser.should_receive(:tagged_with).with('good', 'eminem')
+      @parser.parse('is eminem good?')
       @parser.should_receive(:tagged_with).with('shit', 'eminem')
       @parser.parse('is eminem shit?')
     end

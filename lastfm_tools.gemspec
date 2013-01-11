@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "lastfm_tools"
-  s.version = "1.1.0"
+  s.version = "1.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["paulmillr"]
-  s.date = "2012-09-15"
+  s.date = "2013-01-11"
   s.description = "A backuper, helper and data analyzer for Last.fm API 2.0"
   s.email = "paul@paulmillr.com"
   s.executables = ["lastfmtools"]

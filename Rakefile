@@ -20,7 +20,7 @@ Jeweler::Tasks.new do |gem|
   gem.summary = "Last.FM backuper, helper and data analyzer."
   gem.description = "A backuper, helper and data analyzer for Last.fm API 2.0"
   gem.email = "paul@paulmillr.com"
-  gem.homepage = "http://github.com/paulmillr/lastfm_tools"
+  gem.homepage = "http://github.com/paulmillr/lastfm-tools"
   gem.authors = ["paulmillr"]
   gem.executables = ["lastfmtools"]
 end

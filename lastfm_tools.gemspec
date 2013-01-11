@@ -40,7 +40,7 @@ Gem::Specification.new do |s|
     "spec/lastfm_tools_spec.rb",
     "spec/spec_helper.rb"
   ]
-  s.homepage = "http://github.com/paulmillr/lastfm-tools"
+  s.homepage = "http://github.com/paulmillr/lastfm_tools"
   s.require_paths = ["lib"]
   s.rubygems_version = "1.8.23"
   s.summary = "Last.FM backuper, helper and data analyzer."
